@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personal Finance Tracker 💰</title>
+    <link rel="stylesheet" href="./src/style.css">
+</head>
+<body>
+    <div id="app">
+        <h1>Finance Tracker 💰</h1>
+        
+        <div class="balance-card">
+            <h2>Your Balance: <span id="balance-amount">$0</span></h2>
+        </div>
+
+        <form id="transaction-form">
+            <input type="text" id="title" placeholder="What for? (e.g. Pizza)" required>
+            <input type="number" id="amount" placeholder="Amount" required>
+            <select id="type">
+                <option value="expense">Expense 🔴</option>
+                <option value="income">Income 🟢</option>
+            </select>
+            <button type="submit">Add Transaction</button>
+        </form>
+
+        <ul id="transaction-list"></ul>
+    </div>
+
+    <script type="module" src="/src/main.ts"></script>
+    
+</body>
+</html>
