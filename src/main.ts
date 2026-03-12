@@ -1,13 +1,55 @@
 import type { Transaction } from './types.js';
-import  { supabase } from './SupabaseClient.js'; // حتماً این فایل رو قبلاً ساخته باشی
-
+import  { supabase } from './SupabaseClient.js'; 
+import { Chart, registerables } from 'chart.js';
+Chart.register(...registerables);
 const balanceEl = document.querySelector('#balance-amount') as HTMLSpanElement;
 const form = document.querySelector('#transaction-form') as HTMLFormElement;
 const list = document.querySelector('#transaction-list') as HTMLUListElement;
 
 let transactions: Transaction[] = [];
+let myChart: Chart | null = null; 
+function updateChart() {
+    const ctx = document.getElementById('financeChart') as HTMLCanvasElement;
+    if (!ctx) return;
 
+    const income = transactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + t.amount, 0);
 
+    const expense = transactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + t.amount, 0);
+
+    if (myChart) {
+        myChart.destroy();
+    }
+
+  
+    const config: any = {
+        type: 'doughnut',
+        data: {
+            labels: ['Income', 'Expense'],
+            datasets: [{
+                data: [income, expense],
+                backgroundColor: ['#34c759', '#ff3b30'], 
+                borderWidth: 0,
+                hoverOffset: 10,
+                cutout: '80%' 
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            }
+        }
+    };
+
+    myChart = new Chart(ctx, config);
+}
 async function fetchTransactions() {
     const { data, error } = await supabase
         .from('transactions')
@@ -59,22 +101,36 @@ function renderList() {
     list.innerHTML = "";
     transactions.forEach((transaction) => {
         const li = document.createElement('li');
-        li.className = 'transaction-item';
-        const sign = transaction.type === 'income' ? '+' : '-';
-        const colorClass = transaction.type === 'income' ? 'text-success' : 'text-danger';
+  
+       li.className = 'flex justify-between items-center p-4 bg-transparent border-b border-slate-50 hover:bg-slate-50 transition-colors cursor-pointer';
+        
+        const isIncome = transaction.type === 'income';
+        const colorClass = isIncome ? 'text-emerald-600' : 'text-rose-600';
+        const sign = isIncome ? '+' : '-';
 
         li.innerHTML = `
-            <div style="display: flex; align-items: center; gap: 10px;">
-                <span>${transaction.icon}</span>
-                <span>${transaction.title}</span>
+            <div class="flex items-center gap-4">
+                <div class="w-10 h-10 flex items-center justify-center bg-white rounded-full shadow-sm text-xl">
+                    ${transaction.icon}
+                </div>
+                <div>
+                    <p class="font-bold text-slate-800">${transaction.title}</p>
+                    <p class="text-xs text-slate-400 capitalize">${transaction.type}</p>
+                </div>
             </div>
-            <span class="${colorClass}">${sign}$${transaction.amount.toLocaleString()}</span>
-            <button class="delete-btn" onclick="deleteTransaction('${transaction.id}')">❌</button>
+            <div class="flex items-center gap-3">
+                <span class="font-bold ${colorClass}">${sign}$${transaction.amount.toLocaleString()}</span>
+                <button onclick="deleteTransaction('${transaction.id}')" 
+                    class="opacity-0 group-hover:opacity-100 transition-opacity p-2 text-slate-300 hover:text-rose-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+            </div>
         `;
         list.appendChild(li);
     });
 }
-
 function updateUI() {
     const total = transactions.reduce((acc, t) => t.type === 'income' ? acc + t.amount : acc - t.amount, 0);
     if (balanceEl) {
@@ -82,8 +138,10 @@ function updateUI() {
         balanceEl.style.color = total >= 0 ? '#2ecc71' : '#e74c3c';
     }
     renderList();
+    updateChart();
 }
 
+updateChart();
 
 form.addEventListener('submit', async (e) => { 
     e.preventDefault();
@@ -95,7 +153,7 @@ form.addEventListener('submit', async (e) => {
    const newTransaction: Transaction = {
     id: Math.random().toString(36).substring(2, 9),
     title: titleInput.value,
-    amount: Number(amountInput.value), // اینجا رو حتماً Number بذار
+    amount: Number(amountInput.value), 
     type: typeSelect.value as 'income' | 'expense',
     category: 'General',
     icon: getIcon(titleInput.value),
