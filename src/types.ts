@@ -3,9 +3,7 @@ export interface Transaction {
     title: string;
     amount: number;
     type: 'income' | 'expense';
-    category: string;
-    icon: string; 
-    date: string;
+    created_at?: string;
 }
 
 export type AppState = {
