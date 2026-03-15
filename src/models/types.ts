@@ -3,10 +3,5 @@ export interface Transaction {
     title: string;
     amount: number;
     type: 'income' | 'expense';
-    created_at?: string;
-}
-
-export type AppState = {
-    transactions: Transaction[];
-    totalBalance: number;
+    created_at: string;
 }

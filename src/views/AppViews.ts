@@ -1,4 +1,4 @@
-import type { Transaction } from './types.js';
+import type { Transaction } from '../models/types.js';
 
 export const UIController = {
     renderList(transactions: Transaction[], onDelete: (id: string) => void) {

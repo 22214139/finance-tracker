@@ -1,5 +1,5 @@
 import Chart from 'chart.js/auto';
-import type { Transaction } from './types.js';
+import type { Transaction } from '../models/types';
 
 let myChart: any = null;
 

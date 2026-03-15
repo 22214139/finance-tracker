@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="fa" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finance Tracker - Admin Panel</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="./src/views/style.css">
+</head>
+<body class="bg-[#0f172a] text-slate-200 font-sans min-h-screen">
+
+    <div class="max-w-6xl mx-auto p-6 md:p-10">
+        <header class="flex justify-between items-center mb-10">
+            <div>
+                <h1 class="text-4xl font-black text-emerald-400 tracking-tighter">ADMIN PANEL</h1>
+                <p class="text-slate-400 text-sm mt-1 font-medium">Global Financial Overview</p>
+            </div>
+            <a href="index.html" class="bg-slate-700/50 hover:bg-slate-700 text-white px-6 py-2 rounded-full text-sm font-bold transition-all border border-slate-600">
+                Back to App
+            </a>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-10">
+            
+            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-slate-800/40 border border-slate-700/50 p-8 rounded-[2rem] backdrop-blur-sm shadow-xl">
+                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">Total Transactions</p>
+                    <div id="total-count" class="text-5xl font-black italic text-white">0</div>
+                </div>
+
+                <div class="bg-slate-800/40 border border-slate-700/50 p-8 rounded-[2rem] backdrop-blur-sm shadow-xl">
+                    <p class="text-slate-400 text-xs font-black uppercase tracking-widest mb-2">System Volume</p>
+                    <div id="total-volume" class="text-5xl font-black italic text-emerald-400">$0</div>
+                </div>
+                
+                <div class="md:col-span-2 bg-slate-800/40 border border-slate-700/50 rounded-[2rem] overflow-hidden backdrop-blur-sm shadow-xl">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="text-slate-500 text-[10px] uppercase tracking-[0.2em] border-b border-slate-700/50">
+                                    <th class="p-6">Title</th>
+                                    <th class="p-6">Amount</th>
+                                    <th class="p-6">Type</th>
+                                    <th class="p-6">Date</th>
+                                    <th class="p-6 text-center">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body" class="divide-y divide-slate-700/20">
+                                </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-slate-800/40 border border-slate-700/50 p-8 rounded-[2rem] backdrop-blur-sm shadow-xl flex flex-col items-center justify-center">
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mb-6 self-start">Cash Flow Ratio</p>
+                <div class="w-full relative">
+                    <canvas id="financeChart"></canvas>
+                </div>
+                <div class="mt-6 flex gap-4 text-[10px] font-bold">
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 bg-emerald-500 rounded-full"></span> INCOME</div>
+                    <div class="flex items-center gap-2"><span class="w-3 h-3 bg-rose-500 rounded-full"></span> EXPENSE</div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script type="module" src="./src/controllers/admin.ts"></script>
+</body>
+</html>

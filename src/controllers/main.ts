@@ -1,7 +1,7 @@
-import { SupabaseService } from './SupabaseService.js';
-import { ChartManager } from './ChartManager.js';
-import { UIController } from './UIController.js';
-import type { Transaction } from './types.js';
+import { SupabaseService } from '../models/SupabaseService.js';
+import { ChartManager } from '../views/ChartManager.js';
+import { UIController } from '../views/AppViews.js';
+import type { Transaction } from '../models/types.js';
 
 let transactions: Transaction[] = [];
 
