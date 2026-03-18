@@ -2,7 +2,16 @@ import { supabase } from '../models/SupabaseClient';
 import { AdminView } from '../views/AdminView';
 import { ChartManager } from '../views/ChartManager';
 import type { Transaction } from '../models/types';
+  
+async function protectRoute() {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) {
+        // اگر کاربر لاگین نبود، شوتش کن به صفحه لاگین!
+        window.location.href = 'login.html';
+    }
+}
 
+protectRoute();
 // ۱. تابع حذف تراکنش
 async function handleDelete(id: string) {
     if (!confirm("Are you sure you want to delete this?")) return;
